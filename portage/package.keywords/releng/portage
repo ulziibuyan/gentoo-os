@@ -1,0 +1,21 @@
+~sys-apps/portage-2.3.24
+# required by redsocks (argument)
+=net-proxy/redsocks-0.5 ~amd64
+
+# required by nanum (argument)
+=media-fonts/nanum-3.0 ~amd64
+# required by cool-retro-term (argument)
+=x11-terms/cool-retro-term-1.0.1 ~amd64
+# required by freetalk (argument)
+=net-im/freetalk-9999 **
+# required by app-editors/atom-1.23.3::gentoo
+# required by app-editors/atom (argument)
+=dev-util/electron-1.6.16 ~amd64
+# required by app-editors/atom (argument)
+=app-editors/atom-1.23.3 ~amd64
+# required by dev-util/electron-1.6.16::gentoo
+# required by app-editors/atom-1.23.3::gentoo
+# required by app-editors/atom (argument)
+=app-eselect/eselect-electron-2.1 ~amd64
+# required by xkbset (argument)
+=x11-misc/xkbset-0.5_p6 ~amd64

@@ -1,0 +1,6 @@
+# required by net-wireless/wpa_supplicant-2.6-r6::gentoo[-libressl,ssl,-gnutls]
+# required by wpa_supplicant (argument)
+# /usr/portage/profiles/package.mask:
+# Lars Wendler <polynomial-c@gentoo.org> (26 Aug 2016)
+# Masked while being tested and reverse deps aren't fully compatible
+=dev-libs/openssl-1.1.0i
