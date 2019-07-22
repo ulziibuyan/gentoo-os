@@ -1,0 +1,39 @@
+sys-apps/util-linux static-libs
+# required by net-misc/networkmanager-1.10.10::gentoo[wifi]
+# required by networkmanager (argument)
+>=net-wireless/wpa_supplicant-2.6-r6 dbus
+# required by dev-util/electron-2.0.10::gentoo
+# required by app-editors/atom-1.32.1::gentoo
+# required by app-editors/atom (argument)
+>=dev-libs/libxml2-2.9.8 icu
+# required by dev-util/electron-2.0.10::gentoo
+# required by app-editors/atom-1.32.1::gentoo
+# required by app-editors/atom (argument)
+>=media-libs/harfbuzz-2.0.2 icu
+# required by dev-util/electron-2.0.10::gentoo
+# required by app-editors/atom-1.32.1::gentoo
+# required by app-editors/atom (argument)
+>=media-libs/libvpx-1.7.0 postproc
+# required by dev-util/electron-2.0.10::gentoo
+# required by app-editors/atom-1.32.1::gentoo
+# required by app-editors/atom (argument)
+>=sys-libs/zlib-1.2.11-r2 minizip
+# required by gnome-base/gnome-keyring-3.28.2::gentoo
+# required by app-crypt/libsecret-0.18.6-r1::gentoo
+>=app-crypt/pinentry-1.1.0-r2 gnome-keyring
+# required by x11-terms/cool-retro-term-1.0.1::gentoo
+# required by cool-retro-term (argument)
+>=dev-qt/qtdeclarative-5.11.1 localstorage
+# required by dev-libs/libappindicator-12.10.0-r301::gentoo
+# required by app-misc/polychromatic-9999::vifino-overlay
+# required by app-misc/polychromatic (argument)
+>=dev-libs/libdbusmenu-16.04.0 gtk3
+# required by app-emulation/virt-manager-1.5.1-r1::gentoo[gtk]
+# required by virt-manager (argument)
+>=net-misc/spice-gtk-0.35 usbredir
+# required by app-emulation/libvirt-4.5.0-r1::gentoo[virt-network]
+# required by libvirt (argument)
+>=net-dns/dnsmasq-2.79 script
+# required by net-wireless/aircrack-ng-1.5.2::gentoo[airdrop-ng]
+# required by aircrack-ng (argument)
+>=net-wireless/lorcon-0.0_p20150109 python
