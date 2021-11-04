@@ -1,0 +1,63 @@
+# package.use
+net-wireless/iwd standalone
+# required by x11-terms/cool-retro-term-1.1.1-r2::gentoo
+# required by cool-retro-term (argument)
+>=dev-qt/qtdeclarative-5.15.2 localstorage
+# required by dev-python/pyzmq-20.0.0::gentoo[-test]
+# required by dev-python/notebook-6.2.0::gentoo
+# required by dev-python/widgetsnbextension-3.5.1-r1::gentoo
+# required by dev-python/ipywidgets-7.6.3::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=net-libs/zeromq-4.3.3-r1 drafts
+# required by dev-python/qtconsole-5.0.2::gentoo
+# required by dev-python/ipython-7.21.0::gentoo[qt5]
+# required by dev-python/jupyter_console-6.1.0-r2::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=dev-python/QtPy-1.9.0-r2 printsupport
+# required by dev-python/PyQt5-5.15.2::gentoo[multimedia]
+# required by dev-python/QtPy-1.9.0-r2::gentoo
+# required by dev-python/qtconsole-5.0.2::gentoo
+# required by dev-python/ipython-7.21.0::gentoo[qt5]
+# required by dev-python/jupyter_console-6.1.0-r2::gentoo
+# required by dev-python/jupyter-1.0.0-r3::gentoo
+# required by jupyter (argument)
+>=dev-qt/qtmultimedia-5.15.2 widgets
+sci-libs/ta-lib
+# required by net-analyzer/wireshark-3.4.5::gentoo[minizip]
+# required by net-analyzer/wireshark (argument)
+>=sys-libs/zlib-1.2.11-r4 minizip
+# required by dev-libs/libxml2-2.9.12-r5::gentoo[lzma]
+# required by dev-python/lxml-4.6.3-r1::gentoo
+# required by sys-apps/systemd-248.6::gentoo
+# required by sys-process/procps-3.3.17-r1::gentoo[systemd]
+# required by @system
+# required by @world (argument)
+>=app-arch/xz-utils-5.2.5-r1 abi_x86_32
+# required by x11-libs/pango-1.48.7-r1::gentoo
+# required by gnome-base/librsvg-2.50.7::gentoo
+# required by x11-themes/adwaita-icon-theme-40.1.1::gentoo
+# required by x11-libs/gtk+-3.24.29::gentoo
+# required by app-crypt/gcr-3.40.0::gentoo[gtk]
+# required by gnome-base/gnome-keyring-40.0::gentoo
+# required by virtual/secret-service-0::gentoo
+# required by app-crypt/libsecret-0.20.4-r1::gentoo
+# required by dev-vcs/git-2.26.2::gentoo
+# required by @selected
+# required by @world (argument)
+>=media-libs/freetype-2.10.4 harfbuzz
+# required by dev-util/itstool-2.0.6-r1::gentoo[python_single_target_python3_8]
+# required by x11-misc/shared-mime-info-2.0-r2::gentoo
+# required by dev-lang/vala-0.52.4::gentoo
+# required by gnome-base/librsvg-2.50.7::gentoo[vala]
+# required by x11-themes/adwaita-icon-theme-40.1.1::gentoo
+# required by x11-libs/gtk+-3.24.29::gentoo
+# required by app-crypt/gcr-3.40.0::gentoo[gtk]
+# required by gnome-base/gnome-keyring-40.0::gentoo
+# required by virtual/secret-service-0::gentoo
+# required by app-crypt/libsecret-0.20.4-r1::gentoo
+# required by dev-vcs/git-2.26.2::gentoo
+# required by @selected
+# required by @world (argument)
+>=dev-libs/libxml2-2.9.12-r5 python_targets_python3_8
