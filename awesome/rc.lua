@@ -8,8 +8,10 @@ local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
+local lain = require("lain")
 -- Theme handling library
 local beautiful = require("beautiful")
+local dpi = require("beautiful.xresources").apply_dpi
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
@@ -45,11 +47,10 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(--gears.filesystem.get_themes_dir() .. "default/theme.lua")
-  gears.filesystem.get_configuration_dir() .. "theme.lua")
+beautiful.init("~/.config/awesome/theme.lua") --gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "hyper" --xterm"
+terminal = "cool-retro-term"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -62,20 +63,21 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    --awful.layout.suit.floating,
-      awful.layout.suit.tile,
-    --awful.layout.suit.tile.left,
-    --awful.layout.suit.tile.bottom,
-    --awful.layout.suit.tile.top,
-    --awful.layout.suit.fair,
-    --awful.layout.suit.fair.horizontal,
-    --awful.layout.suit.spiral,
-    --awful.layout.suit.spiral.dwindle,
-    --awful.layout.suit.max,
-    --awful.layout.suit.max.fullscreen,
-    --awful.layout.suit.magnifier,
-    --awful.layout.suit.corner.nw,
-    --awful.layout.suit.corner.ne,
+    -- awful.layout.suit.floating,
+    awful.layout.suit.tile,
+    lain.layout.centerwork
+    -- awful.layout.suit.tile.left,
+    -- awful.layout.suit.tile.bottom,
+    -- awful.layout.suit.tile.top,
+    -- awful.layout.suit.fair,
+    -- awful.layout.suit.fair.horizontal,
+    -- awful.layout.suit.spiral,
+    -- awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.max,
+    -- awful.layout.suit.max.fullscreen,
+    -- awful.layout.suit.magnifier,
+    -- awful.layout.suit.corner.nw,
+    -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
 }
@@ -106,19 +108,53 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()
 
--- Create a widget and update its content using the output of a shell
--- command every 10 seconds:
+--[[
+ * Converts an HSV color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+ * Assumes h, s, and v are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   Number  h       The hue
+ * @param   Number  s       The saturation
+ * @param   Number  v       The value
+ * @return  Array           The RGB representation
+ *
+ * https://github.com/EmmanuelOga/columns/blob/master/utils/color.lua
+]]
+local function hsvToRgb(h, s, v, a)
+  local r, g, b
+
+  local i = math.floor(h * 6);
+  local f = h * 6 - i;
+  local p = v * (1 - s);
+  local q = v * (1 - f * s);
+  local t = v * (1 - (1 - f) * s);
+
+  i = i % 6
+
+  if i == 0 then r, g, b = v, t, p
+  elseif i == 1 then r, g, b = q, v, p
+  elseif i == 2 then r, g, b = p, v, t
+  elseif i == 3 then r, g, b = p, q, v
+  elseif i == 4 then r, g, b = t, p, v
+  elseif i == 5 then r, g, b = v, p, q
+  end
+
+  return r * 255, g * 255, b * 255, a
+end
+
+-- for BATTERY:
+--   Create a widget and update its content using the output of a shell
+--   command every 10 seconds:
 local mybatterybar = wibox.widget {
     {
         min_value    = 0,
         max_value    = 100,
         value        = 50,
-        -- paddings     = 1,
-        -- border_width = 1,
-        -- forced_width = 50,
-        -- border_color = "#0000ff",
-        ticks        = true,
-        id           = "mypb",
+        color = '#ffff00',
+        background_color = '#7f7f7f',
+        bar_shape = gears.shape.rounded_bar,
+        id           = "progress",
         widget       = wibox.widget.progressbar,
     },
     {
@@ -127,14 +163,19 @@ local mybatterybar = wibox.widget {
         widget       = wibox.widget.textbox,
     },
     layout      = wibox.layout.stack,
-    set_battery = function(self, val)
-        -- self.mytb.text  = tonumber(val).."%"
-        self.mypb.value = tonumber(val)
+    set_battery = function(self, v)
+        n = tonumber (v)
+        self.progress.value = n
+        local h = 0.25 * n -- Interested in values between Red and Green.
+        local r, g, b, a = hsvToRgb (h / 100, 1, 1, 0)
+        rgb = string.format ("#%02x%02x%02x", r, g, b)
+        -- naughty.notify ({ text = rgb })
+        self.progress.color = rgb
     end,
 }
 
 gears.timer {
-    timeout   = 60,
+    timeout   = 300,
     call_now  = true,
     autostart = true,
     callback  = function()
@@ -147,6 +188,23 @@ gears.timer {
             end
         )
     end
+}
+
+local s_rotate_button = wibox.widget {
+        widget = wibox.widget.textbox,
+        id = "s_rotate_button",
+        text = "S_ROTATE",
+        buttons = gears.table.join(
+            awful.button({}, 1, nil, function (v)
+                awful.spawn.easy_async("/usr/local/bin/tp-l380-yoga rotate",
+                  function(stdout, stderr, reason, exit_code)
+                    if exit_code ~= 0 then
+                      naughty.notify { text = stderr }
+                    end
+                  end
+                )
+            end)
+        )
 }
 
 -- {{{ Wibar
@@ -208,7 +266,43 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
+w_energy_fmt = " energy %.3f Ah "
+w_energy = wibox.widget.textbox (w_energy_fmt)
+w_thermal_fmt = "thermal %d°%s rpm "
+w_thermal = wibox.widget.textbox (w_thermal_fmt)
+w_thermal:buttons (gears.table.join (awful.button ({}, 1,
+  function () awful.spawn('xsensors') end
+)))
+w_freq_fmt = 'freq %.3f GHz '
+w_freq = wibox.widget.textbox (w_freq_fmt)
+
+gears.timer {
+    timeout   = 5,
+    autostart = true,
+    callback  = function()
+        awful.spawn.easy_async ('cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input',
+            function (stdout, stderr, exitreason, exitcode)
+                local temp = stdout / 1000 -- string.match (stdout, '%d+')
+                local fan_speed_line = "" -- string.match (stdout, 'speed:%s+%d+')
+                local fan_speed = "-" -- string.match (fan_speed_line, '%d+')
+                w_thermal:set_text (string.format (w_thermal_fmt, temp, fan_speed))
+            end
+        )
+        awful.spawn.easy_async (
+            'sh -c "cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq"',
+            function (stdout, stderr, exitreason, exitcode)
+              local freq_avg = 0
+              for freq in string.gmatch (stdout, '%d+') do
+                freq_avg = freq_avg + freq
+              end
+              w_freq:set_text (string.format (w_freq_fmt, freq_avg / 8 / 1000000))
+            end
+        )
+    end
+}
+
 awful.screen.connect_for_each_screen(function(s)
+
     -- Wallpaper
     set_wallpaper(s)
 
@@ -239,34 +333,74 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons
     }
 
+    -- Create the battery rod
+    s.mybatterybox = awful.wibar({ position = "top",
+        screen = s, ontop = true, height = beautiful.useless_gap })
+    s.mybatterybox:setup { layout = wibox.layout.flex.horizontal, mybatterybar }
+
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, visible = false })
+    s.mywibox = awful.wibar({ position = "bottom", screen = s, bg = beautiful.bg_normal .. "00" })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
+            s_rotate_button,
+            -- w_energy,
+            -- w_thermal,
+            -- w_freq,
+            -- w_backlight,
+            --w_redshift,
             s.mytaglist,
-            s.mypromptbox,
         },
-        s.mytasklist, -- Middle widget
+        {  -- Middle widgets container
+          layout = wibox.container.place,
+          {
+            layout = wibox.layout.fixed.horizontal,
+            s.mypromptbox,
+            s.mytasklist,
+            wibox.widget.systray(),
+          },
+        },
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            wibox.widget.systray(),
-            mytextclock,
-            s.mylayoutbox,
+            -- mykeyboardlayout,
+
+            -- w_mpc,
+            -- w_vol,
+            -- w_kblayout,
+            -- w_load,
+            -- w_memory,
+            -- mytextclock,
+            -- s.mylayoutbox,
+            w_thermal,
+            w_freq
         },
     }
-
-    s.batterybox = awful.wibar({ position = "bottom", screen = s, ontop = true,
-      height = beautiful.useless_gap * 3, bg = beautiful.bg_normal .. '00' })
-    s.batterybox:setup { layout = wibox.layout.flex.horizontal, mybatterybar }
-
+    -- s.mywibox:setup {
+    --     layout = wibox.layout.align.horizontal,
+    --     { -- Left widgets
+    --         layout = wibox.layout.fixed.horizontal,
+    --         -- mylauncher,
+    --         s.mytaglist,
+    --         -- s.mypromptbox,
+    --     },
+    --     -- s.mytasklist, -- Middle widget
+    --     { -- Right widgets
+    --         layout = wibox.layout.fixed.horizontal,
+    --         --mykeyboardlayout,
+    --         --wibox.widget.systray(),
+    --         --mytextclock,
+    --         --s.mylayoutbox,
+    --         s_rotate_button,
+    --         w_thermal
+    --     },
+    -- }
 end)
 -- }}}
+
+-- setup_as_primary_screen (screen.primary)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
@@ -315,8 +449,7 @@ globalkeys = gears.table.join(
               {description = "jump to urgent client", group = "client"}),
     awful.key({ modkey,           }, "Tab",
         function ()
-            -- awful.client.focus.history.previous()
-            awful.client.focus.byidx(-1)
+            awful.client.focus.history.previous()
             if client.focus then
                 client.focus:raise()
             end
@@ -496,7 +629,7 @@ root.keys(globalkeys)
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
-      properties = { size_hints_honor = false, -- Remove gaps
+      properties = { size_hints_honor = false,
                      border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
@@ -506,6 +639,7 @@ awful.rules.rules = {
                      screen = awful.screen.preferred,
                      placement = awful.placement.centered+awful.placement.no_offscreen,
                      floating = true,
+                     titlebars_enabled = true
      }
     },
 
@@ -515,6 +649,7 @@ awful.rules.rules = {
           "DTA",  -- Firefox addon DownThemAll.
           "copyq",  -- Includes session name in class.
           "pinentry",
+          "xvkbd",
         },
         class = {
           "Arandr",
@@ -541,12 +676,11 @@ awful.rules.rules = {
       }, properties = { floating = true }},
 
     -- Add titlebars to dialogs
-    { rule_any = {type = { "dialog" }
+    { rule_any = {type = { "normal" },
       }, properties = { titlebars_enabled = true }
     },
 
-
-    -- Set Firefox to // always map on the tag named "2" on screen 1.
+    -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
 }
@@ -559,12 +693,13 @@ client.connect_signal("manage", function (c)
     -- i.e. put it at the end of others instead of setting it master.
     -- if not awesome.startup then awful.client.setslave(c) end
 
-    -- if awesome.startup
-    --  and not c.size_hints.user_position
-    --  and not c.size_hints.program_position then
+    if awesome.startup
+      and not c.size_hints.user_position
+      and not c.size_hints.program_position then
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
-    -- end
+    end
+    gears.surface.apply_shape_bounding(c, gears.shape.rounded_rect, 6) --beautiful.border_radius)
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
@@ -581,10 +716,20 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
+    --awful.titlebar(c, { position = "top", shape = gears.shape.rounded_rect })
+
     awful.titlebar(c) : setup {
+        { -- Right
+            awful.titlebar.widget.floatingbutton (c),
+            awful.titlebar.widget.maximizedbutton(c),
+            awful.titlebar.widget.stickybutton   (c),
+            awful.titlebar.widget.ontopbutton    (c),
+            awful.titlebar.widget.closebutton    (c),
+            layout = wibox.layout.fixed.horizontal()
+        },
         { -- Left
-            --awful.titlebar.widget.iconwidget(c),
-            --buttons = buttons,
+            -- awful.titlebar.widget.iconwidget(c),
+            buttons = buttons,
             layout  = wibox.layout.fixed.horizontal
         },
         { -- Middle
@@ -595,14 +740,7 @@ client.connect_signal("request::titlebars", function(c)
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
         },
-        { -- Right
-            --awful.titlebar.widget.floatingbutton (c),
-            --awful.titlebar.widget.maximizedbutton(c),
-            --awful.titlebar.widget.stickybutton   (c),
-            --awful.titlebar.widget.ontopbutton    (c),
-            --awful.titlebar.widget.closebutton    (c),
-            layout = wibox.layout.fixed.horizontal()
-        },
+
         layout = wibox.layout.align.horizontal
     }
 end)
@@ -610,17 +748,18 @@ end)
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", {raise = false})
+    gears.surface.apply_shape_bounding(c, gears.shape.rounded_rect, 6) --beautiful.border_radius)
 end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+-- }}}
 
 -- Add titlebar if window floats
---client.connect_signal("property::floating", function(c)
---    if c.floating then
---        awful.titlebar.show(c)
---    else
---        awful.titlebar.hide(c)
---    end
---end)
--- }}}
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+end)
