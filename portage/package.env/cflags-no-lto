@@ -1,0 +1,4 @@
+dev-libs/libbsd cflags-no-lto
+media-libs/x264 cflags-no-lto
+media-libs/alsa-lib cflags-no-lto
+www-client/firefox cflags-no-lto
