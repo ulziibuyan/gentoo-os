@@ -1,0 +1,28 @@
+gui-apps/tuigreet ~*
+gui-apps/foot ~arm64
+media-libs/fcft ~arm64
+dev-libs/tllist ~arm64
+gui-libs/greetd ~*
+net-vpn/openfortivpn *
+net-wireless/rfkill *
+dev-libs/bemenu **
+sys-apps/busybox **
+media-fonts/nerd-fonts **
+media-fonts/nanum **
+media-fonts/nanumfont **
+www-client/surf **
+net-misc/youtube-dl **
+media-video/mpv **
+dev-util/android-tools ~arm64
+net-misc/sipcalc ~arm64
+dev-libs/cxxopts ~arm64
+app-mobilephone/pinephone-keyboard ~arm64
+dev-libs/light **
+
+app-emulation/waydroid **
+app-containers/lxc ~arm64
+dev-python/gbinder **
+dev-libs/gbinder **
+dev-libs/libglibutil **
+
+dev-embedded/sdcc **
