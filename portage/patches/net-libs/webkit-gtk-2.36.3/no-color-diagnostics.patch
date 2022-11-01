@@ -1,0 +1,16 @@
+--- a/Source/cmake/WebKitCompilerFlags.cmake    2022-03-24 21:31:53.798019200 +0800
++++ b/Source/cmake/WebKitCompilerFlags.cmake    2022-09-10 23:23:27.072529941 +0800
+@@ -182,13 +182,6 @@
+     WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS(-Wall -Wextra)
+ endif ()
+ 
+-# Ninja tricks compilers into turning off color support.
+-if (CMAKE_GENERATOR STREQUAL "Ninja")
+-    WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS(-fcolor-diagnostics
+-                                         -fdiagnostics-color=always)
+-endif ()
+-
+-
+ string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} LOWERCASE_CMAKE_HOST_SYSTEM_PROCESSOR)
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND NOT "${LOWERCASE_CMAKE_HOST_SYSTEM_PROCESSOR}" MATCHES "x86_64")
+     # To avoid out of memory when building with debug option in 32bit system.

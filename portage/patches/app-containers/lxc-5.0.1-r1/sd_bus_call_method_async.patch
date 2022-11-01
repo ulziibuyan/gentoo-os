@@ -1,0 +1,27 @@
+diff -Naur a/meson.build b/meson.build
+--- a/meson.build	2022-10-06 01:32:48.998483812 +0800
++++ b/meson.build	2022-10-06 02:32:47.375818778 +0800
+@@ -285,9 +285,9 @@
+         has_sd_bus = false
+     endif
+ 
+-    if not cc.has_function('sd_bus_call_method_asyncv', prefix: '#include <systemd/sd-bus.h>', dependencies: libsystemd) 
++    if not cc.has_function('sd_bus_call_method_async', prefix: '#include <systemd/sd-bus.h>', dependencies: libsystemd) 
+         if not sd_bus_optional
+-            error('libsystemd misses required sd_bus_call_method_asyncv function')
++            error('libsystemd misses required sd_bus_call_method_async function')
+         endif
+ 
+         has_sd_bus = false
+diff -Naur a/src/lxc/cgroups/cgfsng.c b/src/lxc/cgroups/cgfsng.c
+--- a/src/lxc/cgroups/cgfsng.c	2022-07-28 12:20:41.000000000 +0800
++++ b/src/lxc/cgroups/cgfsng.c	2022-10-06 02:33:54.088409869 +0800
+@@ -1231,7 +1231,7 @@
+ 	if (r < 0)
+ 		return log_error(SYSTEMD_SCOPE_FAILED, "Failed to connect to user bus: %s", strerror(-r));
+ 
+-	r = sd_bus_call_method_asyncv(bus, NULL, DESTINATION, PATH, INTERFACE, "Subscribe", NULL, NULL, NULL, NULL);
++	r = sd_bus_call_method_async(bus, NULL, DESTINATION, PATH, INTERFACE, "Subscribe", NULL, NULL, NULL);
+ 	if (r < 0)
+ 		return log_error(SYSTEMD_SCOPE_FAILED, "Failed to subscribe to signals: %s", strerror(-r));
+ 
