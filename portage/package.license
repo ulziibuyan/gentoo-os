@@ -1,0 +1,8 @@
+# required by google-chrome (argument)
+>=www-client/google-chrome-70.0.3538.110 google-chrome
+# required by dev-java/oracle-jdk-bin (argument)
+>=dev-java/oracle-jdk-bin-1.8.0.192:1.8 Oracle-BCLA-JavaSE
+# required by adobe-flash (argument)
+>=www-plugins/adobe-flash-31.0.0.153 AdobeFlash-11.x
+# required by www-client/opera (argument)
+>=www-client/opera-60.0.3255.83-r1 OPERA-2014
